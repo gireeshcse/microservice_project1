@@ -1,0 +1,47 @@
+version: "2.0"
+services:
+  backend-ms1:
+    image: node:12-slim
+    working_dir: /app
+    command: bash -c "npm install && npm run dev"
+    networks:
+      - backend
+      - frontend
+    depends_on:
+      - mongodb-ms1
+    ports:
+      - 8080:80
+    volumes:
+      - ./backend-ms1/:/app/
+      - ./environments/.env.dev.backend:/app/.env.development
+
+  frontend-ms1:
+    image: node:12-slim
+    working_dir: /app
+    command: bash -c "npm install && npm run dev"
+    networks:
+      - frontend 
+    depends_on:
+      - mongodb-ms1
+      - backend-ms1
+    ports:
+      - 7080:80
+    volumes:
+      - ./frontend-ms1/:/app/
+      - ./environments/.env.dev.frontend:/app/.env.development
+
+  mongodb-ms1:
+    image: mongo:4.2.5
+    networks:
+      - backend
+    volumes:
+      - "./mongodb/data/:/data/db/"
+    ports:
+      - 27000:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongoadmin
+      MONGO_INITDB_ROOT_PASSWORD: pass123 
+
+networks:
+  backend:
+  frontend:
