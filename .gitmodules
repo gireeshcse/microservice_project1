@@ -1,0 +1,6 @@
+[submodule "backend-ms1"]
+	path = backend-ms1
+	url = https://github.com/gireeshcse/backend-ms1.git
+[submodule "frontend-ms1"]
+	path = frontend-ms1
+	url = https://github.com/gireeshcse/frontend-ms1.git
