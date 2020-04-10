@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microservice-project1
+spec:
+  volumes:
+    - name: frontend-app-volume
+      hostPath:
+        path: ./frontend-ms1
+        type: Directory
+    - name: frontend-nodemodules-volume
+      emptyDir: {}
+  replicas: 2
+  minReadySeconds: 60
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - image: node:12-slim
+        volumeMounts:
+          - name: frontend-app-volume
+            mountPath: /app
+          - name: frontend-nodemodules-volume
+            mountPath: /app/node_modules
+  
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-lb
+  labels:
+    app: frontend-lb
+spec:
+  selector:
+    type: LoadBalancer
+    app: frontend
+  ports:
+  - port: 8080 # Defaults to 80
+    targetPort: 8080 # Container Port
